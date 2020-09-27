@@ -13,3 +13,10 @@ model:
 resolver:
   filename: resolver/resolver.go
   type: Resolver
+
+models:
+  Task:
+    model: app/model.Task
+    fields:
+      id:
+        resolver: true

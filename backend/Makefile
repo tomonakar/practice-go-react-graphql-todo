@@ -27,3 +27,8 @@ migrate-up:
 .PHONY: migrate-down
 migrate-down:
 	docker-compose exec app migrate --source file://migrations --database ${DB_CONN} down 1
+
+# graphqlコードの生成
+.PHONY: generate
+generate:
+	docker-compose exec app go generate ./...

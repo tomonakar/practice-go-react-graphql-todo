@@ -1,6 +1,8 @@
 package main
 
 import (
+	"app/config"
+	"app/resolver"
 	"net/http"
 	"os"
 
@@ -11,9 +13,9 @@ import (
 func main() {
 	e := echo.New()
 
-	e.Use(middleware.Recover())
-	e.Use(middleware.Logger())
-	e.Use(middleware.Gzip())
+	if err := config.InitDB(); err != nil {
+		panic(err.Error())
+	}
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{os.Getenv("CORS_ALLOW_ORIGIN")},
@@ -26,7 +28,7 @@ func main() {
 
 	e.POST("/graphql", func(c echo.Context) error {
 		config := resolver.Config{
-			Recovers: resolver.New(),
+			Resolvers: resolver.New(),
 		}
 		h := handler.GraphQL(resolver.NewExecutableSchema(config))
 		h.ServeHTTP(c.Response(), c.Request())

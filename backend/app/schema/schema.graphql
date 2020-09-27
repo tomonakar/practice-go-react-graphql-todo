@@ -1,3 +1,14 @@
-type Query {}
+type Query {
+  tasks(
+    input: TasksInput!
+    orderBy: TaskOrderFields!
+    page: PaginationInput!
+  ): TaskConnection!
+}
 
-type Mutation {}
+type Mutation {
+  createTask(input: CreateTaskInput!): Task!
+  updateTask(input: UpdateTaskInput!): Task!
+}
+
+scalar Time
