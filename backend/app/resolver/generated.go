@@ -302,13 +302,10 @@ interface Node {
 input PaginationInput {
   first: Int
   after: String
-}`},
+}
+`},
 	&ast.Source{Name: "schema/schema.graphql", Input: `type Query {
-  tasks(
-    input: TasksInput!
-    orderBy: TaskOrderFields!
-    page: PaginationInput!
-  ): TaskConnection!
+  tasks(input: TasksInput!, orderBy: TaskOrderFields!,  page: PaginationInput!): TaskConnection!
 }
 
 type Mutation {
@@ -318,7 +315,7 @@ type Mutation {
 
 scalar Time
 `},
-	&ast.Source{Name: "schema/taks.graphql", Input: `type Task implements Node {
+	&ast.Source{Name: "schema/task.graphql", Input: `type Task implements Node {
   id: ID!
   title: String!
   notes: String!
@@ -2396,6 +2393,8 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
+	case model.Task:
+		return ec._Task(ctx, sel, &obj)
 	case *model.Task:
 		if obj == nil {
 			return graphql.Null

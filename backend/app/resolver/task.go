@@ -7,7 +7,7 @@ import (
 
 type taskResolver struct{ *Resolver }
 
-func (r *Resolver) Task() TaskResolve {
+func (r *Resolver) Task() TaskResolver {
 	return &taskResolver{r}
 }
 

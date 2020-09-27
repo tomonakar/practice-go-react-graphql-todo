@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/99designs/gqlgen/handler"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	elog "github.com/labstack/gommon/log"
 )
 
 func main() {
@@ -17,10 +19,18 @@ func main() {
 		panic(err.Error())
 	}
 
+	if err := config.InitShortID(); err != nil {
+		panic(err.Error())
+	}
+
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{os.Getenv("CORS_ALLOW_ORIGIN")},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
+
+	e.Use(middleware.Recover())
+	e.Use(middleware.Logger())
+	e.Use(middleware.Gzip())
 
 	e.GET("/health", func(c echo.Context) error {
 		return c.NoContent(http.StatusOK)
@@ -32,10 +42,10 @@ func main() {
 		}
 		h := handler.GraphQL(resolver.NewExecutableSchema(config))
 		h.ServeHTTP(c.Response(), c.Request())
-
 		return nil
 	})
 
+	e.Logger.SetLevel(elog.INFO)
 	e.HideBanner = true
 	e.Logger.Fatal(e.Start(":3000"))
 }

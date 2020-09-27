@@ -52,3 +52,6 @@ Temporary Items
 
 # database
 backend/db/mysql/data
+
+# binary
+backend/app/app

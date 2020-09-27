@@ -1,9 +1,5 @@
 type Query {
-  tasks(
-    input: TasksInput!
-    orderBy: TaskOrderFields!
-    page: PaginationInput!
-  ): TaskConnection!
+  tasks(input: TasksInput!, orderBy: TaskOrderFields!,  page: PaginationInput!): TaskConnection!
 }
 
 type Mutation {
